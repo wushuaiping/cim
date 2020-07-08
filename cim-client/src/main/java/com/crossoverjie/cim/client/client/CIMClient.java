@@ -48,8 +48,8 @@ public class CIMClient {
     @Value("${cim.user.id}")
     private long userId;
 
-    @Value("${cim.user.userName}")
-    private String userName;
+    @Value("${cim.user.username}")
+    private String username;
 
     private SocketChannel channel;
 
@@ -130,14 +130,14 @@ public class CIMClient {
      * @throws Exception
      */
     private CIMServerResVO.ServerInfo userLogin() {
-        LoginReqVO loginReqVO = new LoginReqVO(userId, userName);
+        LoginReqVO loginReqVO = new LoginReqVO(userId, username);
         CIMServerResVO.ServerInfo cimServer = null;
         try {
             cimServer = routeRequest.getCIMServer(loginReqVO);
 
             //保存系统信息
             clientInfo.saveServiceInfo(cimServer.getIp() + ":" + cimServer.getCimServerPort())
-                    .saveUserInfo(userId, userName);
+                    .saveUserInfo(userId, username);
 
             LOGGER.info("cimServer=[{}]", cimServer.toString());
         } catch (Exception e) {
@@ -158,7 +158,7 @@ public class CIMClient {
     private void loginCIMServer() {
         CIMRequestProto.CIMReqProtocol login = CIMRequestProto.CIMReqProtocol.newBuilder()
                 .setRequestId(userId)
-                .setReqMsg(userName)
+                .setReqMsg(username)
                 .setType(Constants.CommandType.LOGIN)
                 .build();
         ChannelFuture future = channel.writeAndFlush(login);

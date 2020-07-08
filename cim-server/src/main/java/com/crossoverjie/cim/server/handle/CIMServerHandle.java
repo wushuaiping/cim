@@ -44,7 +44,7 @@ public class CIMServerHandle extends SimpleChannelInboundHandler<CIMRequestProto
         //可能出现业务判断离线后再次触发 channelInactive
         CIMUserInfo userInfo = SessionSocketHolder.getUserId((NioSocketChannel) ctx.channel());
         if (userInfo != null){
-            LOGGER.warn("[{}] trigger channelInactive offline!",userInfo.getUserName());
+            LOGGER.warn("[{}] trigger channelInactive offline!",userInfo.getUsername());
 
             //Clear route info and offline.
             RouteHandler routeHandler = SpringBeanFactory.getBean(RouteHandler.class);

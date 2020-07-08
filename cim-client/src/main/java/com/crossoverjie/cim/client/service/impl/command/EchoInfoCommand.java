@@ -29,7 +29,7 @@ public class EchoInfoCommand implements InnerCommand {
     @Override
     public void process(String msg) {
         echoService.echo("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-        echoService.echo("client info={}", clientInfo.get().getUserName());
+        echoService.echo("client info={}", clientInfo.get().getUsername());
         echoService.echo("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
     }
 }

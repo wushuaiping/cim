@@ -36,7 +36,7 @@ public class PrintOnlineUsersCommand implements InnerCommand {
 
             echoService.echo("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
             for (OnlineUsersResVO.DataBodyBean onlineUser : onlineUsers) {
-                echoService.echo("userId={}=====userName={}",onlineUser.getUserId(),onlineUser.getUserName());
+                echoService.echo("userId={}=====username={}",onlineUser.getUserId(),onlineUser.getUsername());
             }
             echoService.echo("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 

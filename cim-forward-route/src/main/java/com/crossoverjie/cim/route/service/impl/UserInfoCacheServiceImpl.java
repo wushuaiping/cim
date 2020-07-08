@@ -42,9 +42,9 @@ public class UserInfoCacheServiceImpl implements UserInfoCacheService {
         }
 
         //load redis
-        String sendUserName = redisTemplate.opsForValue().get(ACCOUNT_PREFIX + userId);
-        if (sendUserName != null){
-            cimUserInfo = new CIMUserInfo(userId,sendUserName) ;
+        String sendUsername = redisTemplate.opsForValue().get(ACCOUNT_PREFIX + userId);
+        if (sendUsername != null){
+            cimUserInfo = new CIMUserInfo(userId,sendUsername) ;
             USER_INFO_MAP.put(userId,cimUserInfo) ;
         }
 

@@ -52,12 +52,12 @@ public class CommonTest {
         OnlineUsersResVO.DataBodyBean bodyBean = new OnlineUsersResVO.DataBodyBean() ;
 
         bodyBean.setUserId(100L);
-        bodyBean.setUserName("zhangsan");
+        bodyBean.setUsername("zhangsan");
         onlineUsers.add(bodyBean) ;
 
         bodyBean = new OnlineUsersResVO.DataBodyBean();
         bodyBean.setUserId(200L);
-        bodyBean.setUserName("crossoverJie");
+        bodyBean.setUsername("crossoverJie");
         onlineUsers.add(bodyBean) ;
 
         LOGGER.info("list={}",JSON.toJSONString(onlineUsers));
@@ -66,7 +66,7 @@ public class CommonTest {
 
         for (OnlineUsersResVO.DataBodyBean onlineUser : onlineUsers) {
 
-            LOGGER.info("userId={}=====userName={}",onlineUser.getUserId(),onlineUser.getUserName());
+            LOGGER.info("userId={}=====username={}",onlineUser.getUserId(),onlineUser.getUsername());
         }
         LOGGER.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
     }

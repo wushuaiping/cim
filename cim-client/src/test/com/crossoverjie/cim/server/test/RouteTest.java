@@ -29,15 +29,15 @@ public class RouteTest {
     @Value("${cim.user.id}")
     private long userId;
 
-    @Value("${cim.user.userName}")
-    private String userName;
+    @Value("${cim.user.username}")
+    private String username;
 
     @Autowired
     private RouteRequest routeRequest ;
 
     @Test
     public void test() throws Exception {
-        LoginReqVO vo = new LoginReqVO(userId,userName) ;
+        LoginReqVO vo = new LoginReqVO(userId,username) ;
         CIMServerResVO.ServerInfo cimServer = routeRequest.getCIMServer(vo);
         LOGGER.info("cimServer=[{}]",cimServer.toString());
     }

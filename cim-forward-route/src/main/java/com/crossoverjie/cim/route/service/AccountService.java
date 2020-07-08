@@ -31,15 +31,15 @@ public interface AccountService {
      * @return true 成功 false 失败
      * @throws Exception
      */
-    StatusEnum login(LoginReqVO loginReqVO) throws Exception ;
+    StatusEnum loginServer(LoginReqVO loginReqVO) throws Exception ;
 
     /**
      * 保存路由信息
-     * @param msg 服务器信息
+     * @param server 服务器信息
      * @param loginReqVO 用户信息
      * @throws Exception
      */
-    void saveRouteInfo(LoginReqVO loginReqVO ,String msg) throws Exception ;
+    void saveRouteInfo(LoginReqVO loginReqVO ,String server) throws Exception ;
 
     /**
      * 加载所有用户的路有关系

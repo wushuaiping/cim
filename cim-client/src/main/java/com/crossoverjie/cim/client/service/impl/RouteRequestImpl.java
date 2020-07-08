@@ -97,7 +97,7 @@ public class RouteRequestImpl implements RouteRequest {
         RouteApi routeApi = new ProxyManager<>(RouteApi.class, routeUrl, okHttpClient).getInstance();
         com.crossoverjie.cim.route.api.vo.req.LoginReqVO vo = new com.crossoverjie.cim.route.api.vo.req.LoginReqVO() ;
         vo.setUserId(loginReqVO.getUserId());
-        vo.setUserName(loginReqVO.getUserName());
+        vo.setUsername(loginReqVO.getUsername());
 
         Response response = null;
         CIMServerResVO cimServerResVO = null;

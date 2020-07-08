@@ -27,7 +27,7 @@ public class EchoServiceImpl implements EchoService {
     public void echo(String msg, Object... replace) {
         String date = LocalDate.now().toString() + " " + LocalTime.now().withNano(0).toString();
 
-        msg = "[" + date + "] \033[31;4m" + appConfiguration.getUserName() + PREFIX + "\033[0m" + " " + msg;
+        msg = "[" + date + "] \033[31;4m" + appConfiguration.getUsername() + PREFIX + "\033[0m" + " " + msg;
 
         String log = print(msg, replace);
 

@@ -16,7 +16,7 @@ public class OnlineUsersResVO {
      * code : 9000
      * message : 成功
      * reqNo : null
-     * dataBody : [{"userId":1545574841528,"userName":"zhangsan"},{"userId":1545574871143,"userName":"crossoverJie"}]
+     * dataBody : [{"userId":1545574841528,"username":"zhangsan"},{"userId":1545574871143,"username":"crossoverJie"}]
      */
 
     private String code;
@@ -59,11 +59,11 @@ public class OnlineUsersResVO {
     public static class DataBodyBean {
         /**
          * userId : 1545574841528
-         * userName : zhangsan
+         * username : zhangsan
          */
 
         private long userId;
-        private String userName;
+        private String username;
 
         public long getUserId() {
             return userId;
@@ -73,12 +73,12 @@ public class OnlineUsersResVO {
             this.userId = userId;
         }
 
-        public String getUserName() {
-            return userName;
+        public String getUsername() {
+            return username;
         }
 
-        public void setUserName(String userName) {
-            this.userName = userName;
+        public void setUsername(String username) {
+            this.username = username;
         }
     }
 }

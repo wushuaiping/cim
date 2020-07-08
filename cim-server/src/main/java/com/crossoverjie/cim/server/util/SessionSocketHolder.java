@@ -17,8 +17,8 @@ public class SessionSocketHolder {
     private static final Map<Long, NioSocketChannel> CHANNEL_MAP = new ConcurrentHashMap<>(16);
     private static final Map<Long, String> SESSION_MAP = new ConcurrentHashMap<>(16);
 
-    public static void saveSession(Long userId,String userName){
-        SESSION_MAP.put(userId, userName);
+    public static void saveSession(Long userId,String username){
+        SESSION_MAP.put(userId, username);
     }
 
     public static void removeSession(Long userId){
@@ -56,8 +56,8 @@ public class SessionSocketHolder {
             NioSocketChannel value = entry.getValue();
             if (nioSocketChannel == value){
                 Long key = entry.getKey();
-                String userName = SESSION_MAP.get(key);
-                CIMUserInfo info = new CIMUserInfo(key,userName) ;
+                String username = SESSION_MAP.get(key);
+                CIMUserInfo info = new CIMUserInfo(key,username) ;
                 return info ;
             }
         }

@@ -57,30 +57,30 @@ public class AccountServiceRedisImpl implements AccountService {
     public RegisterInfoResVO register(RegisterInfoResVO info) {
         String key = ACCOUNT_PREFIX + info.getUserId();
 
-        String name = redisTemplate.opsForValue().get(info.getUserName());
+        String name = redisTemplate.opsForValue().get(info.getUsername());
         if (null == name) {
             //为了方便查询，冗余一份
-            redisTemplate.opsForValue().set(key, info.getUserName());
-            redisTemplate.opsForValue().set(info.getUserName(), key);
+            redisTemplate.opsForValue().set(key, info.getUsername());
+            redisTemplate.opsForValue().set(info.getUsername(), key);
         } else {
             long userId = Long.parseLong(name.split(":")[1]);
             info.setUserId(userId);
-            info.setUserName(info.getUserName());
+            info.setUsername(info.getUsername());
         }
 
         return info;
     }
 
     @Override
-    public StatusEnum login(LoginReqVO loginReqVO) throws Exception {
+    public StatusEnum loginServer(LoginReqVO loginReqVO) throws Exception {
         //再去Redis里查询
         String key = ACCOUNT_PREFIX + loginReqVO.getUserId();
-        String userName = redisTemplate.opsForValue().get(key);
-        if (null == userName) {
+        String username = redisTemplate.opsForValue().get(key);
+        if (null == username) {
             return StatusEnum.ACCOUNT_NOT_MATCH;
         }
 
-        if (!userName.equals(loginReqVO.getUserName())) {
+        if (!username.equals(loginReqVO.getUsername())) {
             return StatusEnum.ACCOUNT_NOT_MATCH;
         }
 
@@ -95,9 +95,9 @@ public class AccountServiceRedisImpl implements AccountService {
     }
 
     @Override
-    public void saveRouteInfo(LoginReqVO loginReqVO, String msg) throws Exception {
+    public void saveRouteInfo(LoginReqVO loginReqVO, String server) throws Exception {
         String key = ROUTE_PREFIX + loginReqVO.getUserId();
-        redisTemplate.opsForValue().set(key, msg);
+        redisTemplate.opsForValue().set(key, server);
     }
 
     @Override
@@ -154,7 +154,7 @@ public class AccountServiceRedisImpl implements AccountService {
 
         String url = "http://" + cimServerResVO.getIp() + ":" + cimServerResVO.getHttpPort();
         ServerApi serverApi = new ProxyManager<>(ServerApi.class, url, okHttpClient).getInstance();
-        SendMsgReqVO vo = new SendMsgReqVO(cimUserInfo.getUserName() + ":" + groupReqVO.getMsg(), groupReqVO.getUserId());
+        SendMsgReqVO vo = new SendMsgReqVO(cimUserInfo.getUsername() + ":" + groupReqVO.getMsg(), groupReqVO.getUserId());
         Response response = null;
         try {
             response = (Response) serverApi.sendMsg(vo);

@@ -40,7 +40,7 @@ public class ServerHeartBeatHandlerImpl implements HeartBeatHandler {
         if (lastReadTime != null && now - lastReadTime > heartBeatTime){
             CIMUserInfo userInfo = SessionSocketHolder.getUserId((NioSocketChannel) ctx.channel());
             if (userInfo != null){
-                LOGGER.warn("客户端[{}]心跳超时[{}]ms，需要关闭连接!",userInfo.getUserName(),now - lastReadTime);
+                LOGGER.warn("客户端[{}]心跳超时[{}]ms，需要关闭连接!",userInfo.getUsername(),now - lastReadTime);
             }
             routeHandler.userOffLine(userInfo, (NioSocketChannel) ctx.channel());
             ctx.channel().close();

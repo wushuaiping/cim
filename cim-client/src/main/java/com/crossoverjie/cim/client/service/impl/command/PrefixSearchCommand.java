@@ -35,7 +35,7 @@ public class PrefixSearchCommand implements InnerCommand {
             List<OnlineUsersResVO.DataBodyBean> onlineUsers = routeRequest.onlineUsers();
             TrieTree trieTree = new TrieTree();
             for (OnlineUsersResVO.DataBodyBean onlineUser : onlineUsers) {
-                trieTree.insert(onlineUser.getUserName());
+                trieTree.insert(onlineUser.getUsername());
             }
 
             String[] split = msg.split(" ");

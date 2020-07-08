@@ -16,8 +16,8 @@ public class AppConfiguration {
     @Value("${cim.user.id}")
     private Long userId;
 
-    @Value("${cim.user.userName}")
-    private String userName;
+    @Value("${cim.user.username}")
+    private String username;
 
     @Value("${cim.msg.logger.path}")
     private String msgLoggerPath ;
@@ -39,12 +39,12 @@ public class AppConfiguration {
         this.userId = userId;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getMsgLoggerPath() {

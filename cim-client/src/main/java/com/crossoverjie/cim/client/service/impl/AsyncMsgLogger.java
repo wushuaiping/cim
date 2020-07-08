@@ -79,7 +79,7 @@ public class AsyncMsgLogger implements MsgLogger {
         int month = today.getMonthValue();
         int day = today.getDayOfMonth();
 
-        String dir = appConfiguration.getMsgLoggerPath() + appConfiguration.getUserName() + "/";
+        String dir = appConfiguration.getMsgLoggerPath() + appConfiguration.getUsername() + "/";
         String fileName = dir + year + month + day + ".log";
 
         Path file = Paths.get(fileName);
@@ -123,7 +123,7 @@ public class AsyncMsgLogger implements MsgLogger {
     public String query(String key) {
         StringBuilder sb = new StringBuilder();
 
-        Path path = Paths.get(appConfiguration.getMsgLoggerPath() + appConfiguration.getUserName() + "/");
+        Path path = Paths.get(appConfiguration.getMsgLoggerPath() + appConfiguration.getUsername() + "/");
 
         try {
             Stream<Path> list = Files.list(path);
