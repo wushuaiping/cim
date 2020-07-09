@@ -27,7 +27,7 @@ public class CIMServerResVO implements Serializable {
         return code;
     }
 
-    public void setCode(String code) {
+    public void setErrCode(String code) {
         this.code = code;
     }
 
@@ -35,7 +35,7 @@ public class CIMServerResVO implements Serializable {
         return message;
     }
 
-    public void setMessage(String message) {
+    public void setErrMsg(String message) {
         this.message = message;
     }
 
@@ -51,7 +51,7 @@ public class CIMServerResVO implements Serializable {
         return dataBody;
     }
 
-    public void setDataBody(ServerInfo dataBody) {
+    public void setData(ServerInfo dataBody) {
         this.dataBody = dataBody;
     }
 

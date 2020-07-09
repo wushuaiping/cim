@@ -21,7 +21,7 @@ public class ClientInfo {
         return info ;
     }
 
-    public ClientInfo saveUserInfo(long userId,String username){
+    public ClientInfo saveUserInfo(String userId,String username){
         info.setUserId(userId);
         info.setUsername(username);
         return this;
@@ -40,7 +40,7 @@ public class ClientInfo {
 
     public class Info{
         private String username;
-        private long userId ;
+        private String userId ;
         private String serviceInfo ;
         private Date startDate ;
 
@@ -55,11 +55,11 @@ public class ClientInfo {
             this.username = username;
         }
 
-        public long getUserId() {
+        public String getUserId() {
             return userId;
         }
 
-        public void setUserId(long userId) {
+        public void setUserId(String userId) {
             this.userId = userId;
         }
 

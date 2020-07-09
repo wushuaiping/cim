@@ -16,12 +16,12 @@ public class P2PReqVO extends BaseRequest {
 
     @NotNull(message = "userId 不能为空")
     @ApiModelProperty(required = true, value = "消息发送者的 userId", example = "1545574049323")
-    private Long userId ;
+    private String userId ;
 
 
     @NotNull(message = "userId 不能为空")
     @ApiModelProperty(required = true, value = "消息接收者的 userId", example = "1545574049323")
-    private Long receiveUserId ;
+    private String receiveUserId ;
 
 
 
@@ -33,17 +33,17 @@ public class P2PReqVO extends BaseRequest {
     public P2PReqVO() {
     }
 
-    public P2PReqVO(Long userId, Long receiveUserId, String msg) {
+    public P2PReqVO(String userId, String receiveUserId, String msg) {
         this.userId = userId;
         this.receiveUserId = receiveUserId;
         this.msg = msg;
     }
 
-    public Long getReceiveUserId() {
+    public String getReceiveUserId() {
         return receiveUserId;
     }
 
-    public void setReceiveUserId(Long receiveUserId) {
+    public void setReceiveUserId(String receiveUserId) {
         this.receiveUserId = receiveUserId;
     }
 
@@ -55,11 +55,11 @@ public class P2PReqVO extends BaseRequest {
         this.msg = msg;
     }
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

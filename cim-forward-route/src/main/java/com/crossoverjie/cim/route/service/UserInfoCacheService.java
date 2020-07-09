@@ -19,7 +19,7 @@ public interface UserInfoCacheService {
      * @return
      * @throws Exception
      */
-    CIMUserInfo loadUserInfoByUserId(Long userId) ;
+    CIMUserInfo loadUserInfoByUserId(String userId) ;
 
     /**
      * 保存和检查用户登录情况
@@ -27,14 +27,14 @@ public interface UserInfoCacheService {
      * @return true 为可以登录 false 为已经登录
      * @throws Exception
      */
-    boolean saveAndCheckUserLoginStatus(Long userId) throws Exception ;
+    boolean saveAndCheckUserLoginStatus(String userId) throws Exception ;
 
     /**
      * 清除用户的登录状态
      * @param userId
      * @throws Exception
      */
-    void removeLoginStatus(Long userId) throws Exception ;
+    void removeLoginStatus(String userId) throws Exception ;
 
 
     /**

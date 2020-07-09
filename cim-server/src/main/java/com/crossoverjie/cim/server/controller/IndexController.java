@@ -54,9 +54,9 @@ public class IndexController implements ServerApi {
 
         SendMsgResVO sendMsgResVO = new SendMsgResVO() ;
         sendMsgResVO.setMsg("OK") ;
-        res.setCode(StatusEnum.SUCCESS.getCode()) ;
-        res.setMessage(StatusEnum.SUCCESS.getMessage()) ;
-        res.setDataBody(sendMsgResVO) ;
+        res.setErrCode(StatusEnum.SUCCESS.getCode()) ;
+        res.setErrMsg(StatusEnum.SUCCESS.getMessage()) ;
+        res.setData(sendMsgResVO) ;
         return res ;
     }
 

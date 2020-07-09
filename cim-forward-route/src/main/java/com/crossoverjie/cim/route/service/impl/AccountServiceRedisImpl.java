@@ -1,5 +1,6 @@
 package com.crossoverjie.cim.route.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.crossoverjie.cim.common.core.proxy.ProxyManager;
 import com.crossoverjie.cim.common.enums.StatusEnum;
 import com.crossoverjie.cim.common.exception.CIMException;
@@ -9,6 +10,7 @@ import com.crossoverjie.cim.route.api.vo.req.ChatReqVO;
 import com.crossoverjie.cim.route.api.vo.req.LoginReqVO;
 import com.crossoverjie.cim.route.api.vo.res.CIMServerResVO;
 import com.crossoverjie.cim.route.api.vo.res.RegisterInfoResVO;
+import com.crossoverjie.cim.route.api.vo.res.SimpleUserResponse;
 import com.crossoverjie.cim.route.service.AccountService;
 import com.crossoverjie.cim.route.service.UserInfoCacheService;
 import com.crossoverjie.cim.server.api.ServerApi;
@@ -23,15 +25,13 @@ import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-import static com.crossoverjie.cim.common.enums.StatusEnum.OFF_LINE;
-import static com.crossoverjie.cim.route.constant.Constant.ACCOUNT_PREFIX;
-import static com.crossoverjie.cim.route.constant.Constant.ROUTE_PREFIX;
+import static com.crossoverjie.cim.route.constant.Constants.Redis.*;
 
 /**
  * Function:
@@ -63,7 +63,7 @@ public class AccountServiceRedisImpl implements AccountService {
             redisTemplate.opsForValue().set(key, info.getUsername());
             redisTemplate.opsForValue().set(info.getUsername(), key);
         } else {
-            long userId = Long.parseLong(name.split(":")[1]);
+            String userId = name.split(":")[1];
             info.setUserId(userId);
             info.setUsername(info.getUsername());
         }
@@ -72,26 +72,39 @@ public class AccountServiceRedisImpl implements AccountService {
     }
 
     @Override
-    public StatusEnum loginServer(LoginReqVO loginReqVO) throws Exception {
-        //再去Redis里查询
-        String key = ACCOUNT_PREFIX + loginReqVO.getUserId();
-        String username = redisTemplate.opsForValue().get(key);
-        if (null == username) {
-            return StatusEnum.ACCOUNT_NOT_MATCH;
-        }
+    public void loginServer(LoginReqVO loginReqVO) throws Exception {
 
-        if (!username.equals(loginReqVO.getUsername())) {
-            return StatusEnum.ACCOUNT_NOT_MATCH;
-        }
+        // 缓存登陆服务器的用户
+        cacheLoginUser(loginReqVO);
 
-        //登录成功，保存登录状态
-        boolean status = userInfoCacheService.saveAndCheckUserLoginStatus(loginReqVO.getUserId());
-        if (status == false) {
-            //重复登录
-            return StatusEnum.REPEAT_LOGIN;
-        }
+        // 缓存用户到对应题组中
+        cacheTopicGroupUser(loginReqVO);
+    }
 
-        return StatusEnum.SUCCESS;
+    private void cacheTopicGroupUser(LoginReqVO loginReqVO) {
+        // 把用户保存到所选题组中
+        String topicGroupKey = TOPIC_GROUP_PREFIX + loginReqVO.getTopicGroupId();
+        String json = toResponseJson(loginReqVO);
+        Boolean isAbsent = redisTemplate.opsForSet().isMember(topicGroupKey, json);
+        if (!isAbsent) {
+            redisTemplate.opsForSet().add(topicGroupKey, json);
+        }
+    }
+
+    private String toResponseJson(LoginReqVO loginReqVO) {
+        SimpleUserResponse simpleUserResponse = new SimpleUserResponse();
+        simpleUserResponse.setLevel(loginReqVO.getLevel());
+        simpleUserResponse.setUserId(loginReqVO.getUserId());
+        simpleUserResponse.setUsername(loginReqVO.getUsername());
+        return JSONObject.toJSONString(simpleUserResponse);
+    }
+
+    private void cacheLoginUser(LoginReqVO loginReqVO) {
+        String loginAccountKey = ACCOUNT_PREFIX + loginReqVO.getUserId();
+        String value = redisTemplate.opsForValue().get(loginAccountKey);
+        if (value == null) {
+            redisTemplate.opsForValue().set(loginAccountKey, JSONObject.toJSONString(loginReqVO));
+        }
     }
 
     @Override
@@ -101,9 +114,9 @@ public class AccountServiceRedisImpl implements AccountService {
     }
 
     @Override
-    public Map<Long, CIMServerResVO> loadRouteRelated() {
+    public Map<String, CIMServerResVO> loadRouteRelated() {
 
-        Map<Long, CIMServerResVO> routes = new HashMap<>(64);
+        Map<String, CIMServerResVO> routes = new HashMap<>(64);
 
 
         RedisConnection connection = redisTemplate.getConnectionFactory().getConnection();
@@ -129,19 +142,18 @@ public class AccountServiceRedisImpl implements AccountService {
     }
 
     @Override
-    public CIMServerResVO loadRouteRelatedByUserId(Long userId) {
+    public CIMServerResVO loadRouteRelatedByUserId(String userId) {
         String value = redisTemplate.opsForValue().get(ROUTE_PREFIX + userId);
 
         if (value == null) {
-            throw new CIMException(OFF_LINE);
+            throw new CIMException(StatusEnum.VALIDATION_FAIL, "用户已下线");
         }
 
-        CIMServerResVO cimServerResVO = new CIMServerResVO(RouteInfoParseUtil.parse(value));
-        return cimServerResVO;
+        return new CIMServerResVO(RouteInfoParseUtil.parse(value));
     }
 
-    private void parseServerInfo(Map<Long, CIMServerResVO> routes, String key) {
-        long userId = Long.valueOf(key.split(":")[1]);
+    private void parseServerInfo(Map<String, CIMServerResVO> routes, String key) {
+        String userId = key.split(":")[1];
         String value = redisTemplate.opsForValue().get(key);
         CIMServerResVO cimServerResVO = new CIMServerResVO(RouteInfoParseUtil.parse(value));
         routes.put(userId, cimServerResVO);
@@ -149,7 +161,7 @@ public class AccountServiceRedisImpl implements AccountService {
 
 
     @Override
-    public void pushMsg(CIMServerResVO cimServerResVO, long sendUserId, ChatReqVO groupReqVO) throws Exception {
+    public void pushMsg(CIMServerResVO cimServerResVO, String sendUserId, ChatReqVO groupReqVO) throws Exception {
         CIMUserInfo cimUserInfo = userInfoCacheService.loadUserInfoByUserId(sendUserId);
 
         String url = "http://" + cimServerResVO.getIp() + ":" + cimServerResVO.getHttpPort();
@@ -166,7 +178,7 @@ public class AccountServiceRedisImpl implements AccountService {
     }
 
     @Override
-    public void offLine(Long userId) throws Exception {
+    public void offLine(String userId) throws Exception {
 
         // TODO: 2019-01-21 改为一个原子命令，以防数据一致性
 
@@ -175,5 +187,16 @@ public class AccountServiceRedisImpl implements AccountService {
 
         //删除登录状态
         userInfoCacheService.removeLoginStatus(userId);
+    }
+
+    @Override
+    public List<SimpleUserResponse> searchUsersByTopicGroup(String topicGroupId) {
+        String key = TOPIC_GROUP_PREFIX + topicGroupId;
+        Set<String> onlineUsers = redisTemplate.opsForSet().members(key);
+        List<SimpleUserResponse> result = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(onlineUsers)) {
+            onlineUsers.forEach(s -> result.add(JSONObject.parseObject(s, SimpleUserResponse.class)));
+        }
+        return result;
     }
 }

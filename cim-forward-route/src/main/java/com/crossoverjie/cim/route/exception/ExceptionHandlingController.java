@@ -25,8 +25,8 @@ public class ExceptionHandlingController {
     public BaseResponse handleAllExceptions(CIMException ex) {
         logger.error("exception", ex);
         BaseResponse baseResponse = new BaseResponse();
-        baseResponse.setCode(ex.getErrorCode());
-        baseResponse.setMessage(ex.getMessage());
+        baseResponse.setErrCode(ex.getErrorCode());
+        baseResponse.setErrMsg(ex.getMessage());
         return baseResponse ;
     }
 

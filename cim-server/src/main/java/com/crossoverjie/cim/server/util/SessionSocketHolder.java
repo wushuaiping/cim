@@ -14,14 +14,14 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since JDK 1.8
  */
 public class SessionSocketHolder {
-    private static final Map<Long, NioSocketChannel> CHANNEL_MAP = new ConcurrentHashMap<>(16);
-    private static final Map<Long, String> SESSION_MAP = new ConcurrentHashMap<>(16);
+    private static final Map<String, NioSocketChannel> CHANNEL_MAP = new ConcurrentHashMap<>(16);
+    private static final Map<String, String> SESSION_MAP = new ConcurrentHashMap<>(16);
 
-    public static void saveSession(Long userId,String username){
+    public static void saveSession(String userId,String username){
         SESSION_MAP.put(userId, username);
     }
 
-    public static void removeSession(Long userId){
+    public static void removeSession(String userId){
         SESSION_MAP.remove(userId) ;
     }
 
@@ -30,15 +30,15 @@ public class SessionSocketHolder {
      * @param id
      * @param socketChannel
      */
-    public static void put(Long id, NioSocketChannel socketChannel) {
+    public static void put(String id, NioSocketChannel socketChannel) {
         CHANNEL_MAP.put(id, socketChannel);
     }
 
-    public static NioSocketChannel get(Long id) {
+    public static NioSocketChannel get(String id) {
         return CHANNEL_MAP.get(id);
     }
 
-    public static Map<Long, NioSocketChannel> getRelationShip() {
+    public static Map<String, NioSocketChannel> getRelationShip() {
         return CHANNEL_MAP;
     }
 
@@ -52,10 +52,10 @@ public class SessionSocketHolder {
      * @return
      */
     public static CIMUserInfo getUserId(NioSocketChannel nioSocketChannel){
-        for (Map.Entry<Long, NioSocketChannel> entry : CHANNEL_MAP.entrySet()) {
+        for (Map.Entry<String, NioSocketChannel> entry : CHANNEL_MAP.entrySet()) {
             NioSocketChannel value = entry.getValue();
             if (nioSocketChannel == value){
-                Long key = entry.getKey();
+                String key = entry.getKey();
                 String username = SESSION_MAP.get(key);
                 CIMUserInfo info = new CIMUserInfo(key,username) ;
                 return info ;

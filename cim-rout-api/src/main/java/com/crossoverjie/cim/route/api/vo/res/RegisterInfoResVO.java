@@ -10,19 +10,19 @@ import java.io.Serializable;
  * @since JDK 1.8
  */
 public class RegisterInfoResVO implements Serializable{
-    private Long userId ;
+    private String userId ;
     private String username ;
 
-    public RegisterInfoResVO(Long userId, String username) {
+    public RegisterInfoResVO(String userId, String username) {
         this.userId = userId;
         this.username = username;
     }
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

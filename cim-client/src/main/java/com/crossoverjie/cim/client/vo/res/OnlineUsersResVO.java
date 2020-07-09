@@ -28,7 +28,7 @@ public class OnlineUsersResVO {
         return code;
     }
 
-    public void setCode(String code) {
+    public void setErrCode(String code) {
         this.code = code;
     }
 
@@ -36,7 +36,7 @@ public class OnlineUsersResVO {
         return message;
     }
 
-    public void setMessage(String message) {
+    public void setErrMsg(String message) {
         this.message = message;
     }
 
@@ -52,7 +52,7 @@ public class OnlineUsersResVO {
         return dataBody;
     }
 
-    public void setDataBody(List<DataBodyBean> dataBody) {
+    public void setData(List<DataBodyBean> dataBody) {
         this.dataBody = dataBody;
     }
 
@@ -62,14 +62,14 @@ public class OnlineUsersResVO {
          * username : zhangsan
          */
 
-        private long userId;
+        private String userId;
         private String username;
 
-        public long getUserId() {
+        public String getUserId() {
             return userId;
         }
 
-        public void setUserId(long userId) {
+        public void setUserId(String userId) {
             this.userId = userId;
         }
 

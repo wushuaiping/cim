@@ -1,101 +1,89 @@
 package com.crossoverjie.cim.common.res;
 
-
-
 import com.crossoverjie.cim.common.enums.StatusEnum;
-import com.crossoverjie.cim.common.util.StringUtil;
 
 import java.io.Serializable;
 
-public class BaseResponse<T> implements Serializable{
-	private String code;
-	
-	private String message;
+public class BaseResponse<T> implements Serializable {
 
-	/**
-	 * 请求号
-	 */
-	private String reqNo;
-	
-	private T dataBody;
+    /**
+     * 相应成功失败，默认成功
+     */
+    private boolean success = true;
 
-	public BaseResponse() {}
+    /**
+     * 返回内容
+     */
+    private T data;
 
-	public BaseResponse(T dataBody) {
-		this.dataBody = dataBody;
-	}
+    /**
+     * 错误代码
+     */
+    private String errCode;
 
-	public BaseResponse(String code, String message) {
-		this.code = code;
-		this.message = message;
-	}
+    /**
+     * 错误信息
+     */
+    private String errMsg;
 
-	public BaseResponse(String code, String message, T dataBody) {
-		this.code = code;
-		this.message = message;
-		this.dataBody = dataBody;
-	}
+    public boolean isSuccess() {
+        return success;
+    }
 
-	public BaseResponse(String code, String message, String reqNo, T dataBody) {
-		this.code = code;
-		this.message = message;
-		this.reqNo = reqNo;
-		this.dataBody = dataBody;
-	}
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
 
-	public static <T> BaseResponse<T> create(T t){
-		return new BaseResponse<T>(t);
-	}
+    public T getData() {
+        return data;
+    }
 
-	public static <T> BaseResponse<T> create(T t, StatusEnum statusEnum){
-		return new BaseResponse<T>(statusEnum.getCode(), statusEnum.getMessage(), t);
-	}
+    public void setData(T data) {
+        this.data = data;
+    }
 
-	public static <T> BaseResponse<T> createSuccess(T t, String message){
-		return new BaseResponse<T>(StatusEnum.SUCCESS.getCode(), StringUtil.isNullOrEmpty(message) ? StatusEnum.SUCCESS.getMessage() : message, t);
-	}
+    public String getErrCode() {
+        return errCode;
+    }
 
-	public static <T> BaseResponse<T> createFail(T t, String message){
-		return new BaseResponse<T>(StatusEnum.FAIL.getCode(), StringUtil.isNullOrEmpty(message) ? StatusEnum.FAIL.getMessage() : message, t);
-	}
+    public void setErrCode(String errCode) {
+        this.errCode = errCode;
+    }
 
-	public static <T> BaseResponse<T> create(T t, StatusEnum statusEnum, String message){
+    public String getErrMsg() {
+        return errMsg;
+    }
 
-		return new BaseResponse<T>(statusEnum.getCode(), message, t);
-	}
+    public void setErrMsg(String errMsg) {
+        this.errMsg = errMsg;
+    }
 
+    public BaseResponse<T> success(T data) {
+        this.data = data;
+        this.success = true;
+        this.errCode = StatusEnum.SUCCESS.code();
+        this.errMsg = StatusEnum.SUCCESS.message();
+        return this;
+    }
 
-	public String getCode() {
-		return code;
-	}
+    public BaseResponse<T> success() {
+        this.success = true;
+        this.errCode = StatusEnum.SUCCESS.code();
+        this.errMsg = StatusEnum.SUCCESS.message();
+        return this;
+    }
 
-	public void setCode(String code) {
-		this.code = code;
-	}
+    public BaseResponse<T> error(String code, String message) {
+        this.success = false;
+        this.errCode= code;
+        this.errMsg = message;
+        return this;
+    }
 
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
-	}
-
-	public T getDataBody() {
-		return dataBody;
-	}
-
-	public void setDataBody(T dataBody) {
-		this.dataBody = dataBody;
-	}
-
-	public String getReqNo() {
-		return reqNo;
-	}
-
-	public void setReqNo(String reqNo) {
-		this.reqNo = reqNo;
-	}
-
-
+    public BaseResponse<T> error(StatusEnum statusEnum) {
+        this.success = false;
+        this.errCode = statusEnum.code();
+        this.errMsg = statusEnum.message();
+        return this;
+    }
 }

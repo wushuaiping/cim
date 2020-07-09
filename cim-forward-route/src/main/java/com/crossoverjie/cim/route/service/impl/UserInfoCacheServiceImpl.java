@@ -11,8 +11,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.crossoverjie.cim.route.constant.Constant.ACCOUNT_PREFIX;
-import static com.crossoverjie.cim.route.constant.Constant.LOGIN_STATUS_PREFIX;
+import static com.crossoverjie.cim.route.constant.Constants.Redis.ACCOUNT_PREFIX;
+import static com.crossoverjie.cim.route.constant.Constants.Redis.LOGIN_STATUS_PREFIX;
 
 /**
  * Function:
@@ -27,13 +27,13 @@ public class UserInfoCacheServiceImpl implements UserInfoCacheService {
     /**
      * todo 本地缓存，为了防止内存撑爆，后期可换为 LRU。
      */
-    private final static Map<Long,CIMUserInfo> USER_INFO_MAP = new ConcurrentHashMap<>(64) ;
+    private final static Map<String,CIMUserInfo> USER_INFO_MAP = new ConcurrentHashMap<>(64) ;
 
     @Autowired
     private RedisTemplate<String,String> redisTemplate ;
 
     @Override
-    public CIMUserInfo loadUserInfoByUserId(Long userId) {
+    public CIMUserInfo loadUserInfoByUserId(String userId) {
 
         //优先从本地缓存获取
         CIMUserInfo cimUserInfo = USER_INFO_MAP.get(userId);
@@ -52,7 +52,7 @@ public class UserInfoCacheServiceImpl implements UserInfoCacheService {
     }
 
     @Override
-    public boolean saveAndCheckUserLoginStatus(Long userId) throws Exception {
+    public boolean saveAndCheckUserLoginStatus(String userId) throws Exception {
 
         Long add = redisTemplate.opsForSet().add(LOGIN_STATUS_PREFIX, userId.toString());
         if (add == 0){
@@ -63,7 +63,7 @@ public class UserInfoCacheServiceImpl implements UserInfoCacheService {
     }
 
     @Override
-    public void removeLoginStatus(Long userId) throws Exception {
+    public void removeLoginStatus(String userId) throws Exception {
         redisTemplate.opsForSet().remove(LOGIN_STATUS_PREFIX,userId.toString()) ;
     }
 
@@ -75,7 +75,7 @@ public class UserInfoCacheServiceImpl implements UserInfoCacheService {
             if (set == null){
                 set = new HashSet<>(64) ;
             }
-            CIMUserInfo cimUserInfo = loadUserInfoByUserId(Long.valueOf(member)) ;
+            CIMUserInfo cimUserInfo = loadUserInfoByUserId(member) ;
             set.add(cimUserInfo) ;
         }
 

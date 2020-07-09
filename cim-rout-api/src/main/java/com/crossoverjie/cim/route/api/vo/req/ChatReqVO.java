@@ -16,7 +16,7 @@ public class ChatReqVO extends BaseRequest {
 
     @NotNull(message = "userId 不能为空")
     @ApiModelProperty(required = true, value = "userId", example = "1545574049323")
-    private Long userId ;
+    private String userId ;
 
 
     @NotNull(message = "msg 不能为空")
@@ -26,7 +26,7 @@ public class ChatReqVO extends BaseRequest {
     public ChatReqVO() {
     }
 
-    public ChatReqVO(Long userId, String msg) {
+    public ChatReqVO(String userId, String msg) {
         this.userId = userId;
         this.msg = msg;
     }
@@ -39,11 +39,11 @@ public class ChatReqVO extends BaseRequest {
         this.msg = msg;
     }
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

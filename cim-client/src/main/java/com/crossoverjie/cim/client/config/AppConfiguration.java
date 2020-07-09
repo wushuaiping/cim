@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class AppConfiguration {
 
     @Value("${cim.user.id}")
-    private Long userId;
+    private String userId;
 
     @Value("${cim.user.username}")
     private String username;
@@ -31,11 +31,11 @@ public class AppConfiguration {
     @Value("${cim.reconnect.count}")
     private int errorCount ;
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

@@ -27,7 +27,7 @@ public class RouteTest {
     private final static Logger LOGGER = LoggerFactory.getLogger(RouteTest.class);
 
     @Value("${cim.user.id}")
-    private long userId;
+    private String userId;
 
     @Value("${cim.user.username}")
     private String username;

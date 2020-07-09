@@ -8,19 +8,19 @@ package com.crossoverjie.cim.common.pojo;
  * @since JDK 1.8
  */
 public class CIMUserInfo {
-    private Long userId ;
+    private String userId ;
     private String username ;
 
-    public CIMUserInfo(Long userId, String username) {
+    public CIMUserInfo(String userId, String username) {
         this.userId = userId;
         this.username = username;
     }
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

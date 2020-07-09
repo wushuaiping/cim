@@ -66,8 +66,8 @@ public class IndexController {
 
         SendMsgResVO sendMsgResVO = new SendMsgResVO() ;
         sendMsgResVO.setMsg("OK") ;
-        res.setCode(StatusEnum.SUCCESS.getCode()) ;
-        res.setMessage(StatusEnum.SUCCESS.getMessage()) ;
+        res.setErrCode(StatusEnum.SUCCESS.getCode()) ;
+        res.setErrMsg(StatusEnum.SUCCESS.getMessage()) ;
         return res ;
     }
 
@@ -91,8 +91,8 @@ public class IndexController {
 
         SendMsgResVO sendMsgResVO = new SendMsgResVO() ;
         sendMsgResVO.setMsg("OK") ;
-        res.setCode(StatusEnum.SUCCESS.getCode()) ;
-        res.setMessage(StatusEnum.SUCCESS.getMessage()) ;
+        res.setErrCode(StatusEnum.SUCCESS.getCode()) ;
+        res.setErrMsg(StatusEnum.SUCCESS.getMessage()) ;
         return res ;
     }
 
@@ -114,8 +114,8 @@ public class IndexController {
 
         counterService.increment(Constants.COUNTER_SERVER_PUSH_COUNT);
 
-        res.setCode(StatusEnum.SUCCESS.getCode()) ;
-        res.setMessage(StatusEnum.SUCCESS.getMessage()) ;
+        res.setErrCode(StatusEnum.SUCCESS.getCode()) ;
+        res.setErrMsg(StatusEnum.SUCCESS.getMessage()) ;
         return res ;
     }
 }
