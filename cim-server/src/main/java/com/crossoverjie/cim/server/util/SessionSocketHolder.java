@@ -1,5 +1,6 @@
 package com.crossoverjie.cim.server.util;
 
+import com.alibaba.fastjson.JSONObject;
 import com.crossoverjie.cim.common.pojo.CIMUserInfo;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
@@ -10,23 +11,24 @@ import java.util.concurrent.ConcurrentHashMap;
  * Function:
  *
  * @author crossoverJie
- *         Date: 22/05/2018 18:33
+ * Date: 22/05/2018 18:33
  * @since JDK 1.8
  */
 public class SessionSocketHolder {
     private static final Map<String, NioSocketChannel> CHANNEL_MAP = new ConcurrentHashMap<>(16);
     private static final Map<String, String> SESSION_MAP = new ConcurrentHashMap<>(16);
 
-    public static void saveSession(String userId,String username){
-        SESSION_MAP.put(userId, username);
+    public static void saveSession(String userId, String userJson) {
+        SESSION_MAP.put(userId, userJson);
     }
 
-    public static void removeSession(String userId){
-        SESSION_MAP.remove(userId) ;
+    public static void removeSession(String userId) {
+        SESSION_MAP.remove(userId);
     }
 
     /**
      * Save the relationship between the userId and the channel.
+     *
      * @param id
      * @param socketChannel
      */
@@ -48,23 +50,20 @@ public class SessionSocketHolder {
 
     /**
      * 获取注册用户信息
+     *
      * @param nioSocketChannel
      * @return
      */
-    public static CIMUserInfo getUserId(NioSocketChannel nioSocketChannel){
+    public static CIMUserInfo getUserId(NioSocketChannel nioSocketChannel) {
         for (Map.Entry<String, NioSocketChannel> entry : CHANNEL_MAP.entrySet()) {
             NioSocketChannel value = entry.getValue();
-            if (nioSocketChannel == value){
+            if (nioSocketChannel == value) {
                 String key = entry.getKey();
-                String username = SESSION_MAP.get(key);
-                CIMUserInfo info = new CIMUserInfo(key,username) ;
-                return info ;
+                String userJson = SESSION_MAP.get(key);
+                return JSONObject.parseObject(userJson, CIMUserInfo.class);
             }
         }
-
         return null;
     }
-
-
 
 }

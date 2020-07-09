@@ -2,6 +2,7 @@ package com.crossoverjie.cim.route.api.vo.req;
 
 import com.crossoverjie.cim.common.req.BaseRequest;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * Function:
@@ -10,8 +11,9 @@ import lombok.Data;
  * Date: 2018/12/23 22:30
  * @since JDK 1.8
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class LoginReqVO extends BaseRequest {
+public class OnlineRequest extends BaseRequest {
 
     /**
      * 用户id

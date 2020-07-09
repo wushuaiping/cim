@@ -1,37 +1,40 @@
 package com.crossoverjie.cim.route.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.crossoverjie.cim.common.core.proxy.ProxyManager;
 import com.crossoverjie.cim.common.enums.StatusEnum;
 import com.crossoverjie.cim.common.exception.CIMException;
 import com.crossoverjie.cim.common.pojo.CIMUserInfo;
+import com.crossoverjie.cim.common.pojo.RouteInfo;
+import com.crossoverjie.cim.common.route.algorithm.RouteHandle;
 import com.crossoverjie.cim.common.util.RouteInfoParseUtil;
 import com.crossoverjie.cim.route.api.vo.req.ChatReqVO;
-import com.crossoverjie.cim.route.api.vo.req.LoginReqVO;
+import com.crossoverjie.cim.route.api.vo.req.OfflineRequest;
+import com.crossoverjie.cim.route.api.vo.req.OnlineRequest;
 import com.crossoverjie.cim.route.api.vo.res.CIMServerResVO;
-import com.crossoverjie.cim.route.api.vo.res.RegisterInfoResVO;
-import com.crossoverjie.cim.route.api.vo.res.SimpleUserResponse;
+import com.crossoverjie.cim.route.cache.ServerCache;
 import com.crossoverjie.cim.route.service.AccountService;
+import com.crossoverjie.cim.route.service.CommonBizService;
 import com.crossoverjie.cim.route.service.UserInfoCacheService;
 import com.crossoverjie.cim.server.api.ServerApi;
 import com.crossoverjie.cim.server.api.vo.req.SendMsgReqVO;
+import lombok.AllArgsConstructor;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
-import static com.crossoverjie.cim.route.constant.Constants.Redis.*;
+import static com.crossoverjie.cim.route.constant.Constants.Redis.ROUTE_PREFIX;
 
 /**
  * Function:
@@ -41,75 +44,35 @@ import static com.crossoverjie.cim.route.constant.Constants.Redis.*;
  * @since JDK 1.8
  */
 @Service
+@AllArgsConstructor
 public class AccountServiceRedisImpl implements AccountService {
     private final static Logger LOGGER = LoggerFactory.getLogger(AccountServiceRedisImpl.class);
 
-    @Autowired
-    private RedisTemplate<String, String> redisTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
 
-    @Autowired
-    private UserInfoCacheService userInfoCacheService;
+    private final UserInfoCacheService userInfoCacheService;
 
-    @Autowired
-    private OkHttpClient okHttpClient;
+    private final OkHttpClient okHttpClient;
 
-    @Override
-    public RegisterInfoResVO register(RegisterInfoResVO info) {
-        String key = ACCOUNT_PREFIX + info.getUserId();
+    private final CommonBizService commonBizService;
 
-        String name = redisTemplate.opsForValue().get(info.getUsername());
-        if (null == name) {
-            //为了方便查询，冗余一份
-            redisTemplate.opsForValue().set(key, info.getUsername());
-            redisTemplate.opsForValue().set(info.getUsername(), key);
-        } else {
-            String userId = name.split(":")[1];
-            info.setUserId(userId);
-            info.setUsername(info.getUsername());
-        }
+    private final ServerCache serverCache;
 
-        return info;
-    }
+    private final RouteHandle routeHandle;
 
     @Override
-    public void loginServer(LoginReqVO loginReqVO) throws Exception {
+    public void loginServer(OnlineRequest loginReqVO) throws Exception {
 
-        // 缓存登陆服务器的用户
-        cacheLoginUser(loginReqVO);
+        // 缓存用户
+        userInfoCacheService.cacheUserInfo(loginReqVO);
 
         // 缓存用户到对应题组中
-        cacheTopicGroupUser(loginReqVO);
-    }
-
-    private void cacheTopicGroupUser(LoginReqVO loginReqVO) {
-        // 把用户保存到所选题组中
-        String topicGroupKey = TOPIC_GROUP_PREFIX + loginReqVO.getTopicGroupId();
-        String json = toResponseJson(loginReqVO);
-        Boolean isAbsent = redisTemplate.opsForSet().isMember(topicGroupKey, json);
-        if (!isAbsent) {
-            redisTemplate.opsForSet().add(topicGroupKey, json);
-        }
-    }
-
-    private String toResponseJson(LoginReqVO loginReqVO) {
-        SimpleUserResponse simpleUserResponse = new SimpleUserResponse();
-        simpleUserResponse.setLevel(loginReqVO.getLevel());
-        simpleUserResponse.setUserId(loginReqVO.getUserId());
-        simpleUserResponse.setUsername(loginReqVO.getUsername());
-        return JSONObject.toJSONString(simpleUserResponse);
-    }
-
-    private void cacheLoginUser(LoginReqVO loginReqVO) {
-        String loginAccountKey = ACCOUNT_PREFIX + loginReqVO.getUserId();
-        String value = redisTemplate.opsForValue().get(loginAccountKey);
-        if (value == null) {
-            redisTemplate.opsForValue().set(loginAccountKey, JSONObject.toJSONString(loginReqVO));
-        }
+        userInfoCacheService.cacheTopicGroupUser(loginReqVO);
     }
 
     @Override
-    public void saveRouteInfo(LoginReqVO loginReqVO, String server) throws Exception {
-        String key = ROUTE_PREFIX + loginReqVO.getUserId();
+    public void saveRouteInfo(String userId, String server) throws Exception {
+        String key = ROUTE_PREFIX + userId;
         redisTemplate.opsForValue().set(key, server);
     }
 
@@ -178,25 +141,35 @@ public class AccountServiceRedisImpl implements AccountService {
     }
 
     @Override
-    public void offLine(String userId) throws Exception {
-
-        // TODO: 2019-01-21 改为一个原子命令，以防数据一致性
+    public void offline(OfflineRequest offlineRequest) throws Exception {
 
         //删除路由
-        redisTemplate.delete(ROUTE_PREFIX + userId);
+        redisTemplate.delete(ROUTE_PREFIX + offlineRequest.getUserId());
 
         //删除登录状态
-        userInfoCacheService.removeLoginStatus(userId);
+        userInfoCacheService.removeLoginStatus(offlineRequest.getTopicGroupId(), offlineRequest.getUserId());
     }
 
     @Override
-    public List<SimpleUserResponse> searchUsersByTopicGroup(String topicGroupId) {
-        String key = TOPIC_GROUP_PREFIX + topicGroupId;
-        Set<String> onlineUsers = redisTemplate.opsForSet().members(key);
-        List<SimpleUserResponse> result = new ArrayList<>();
-        if (!CollectionUtils.isEmpty(onlineUsers)) {
-            onlineUsers.forEach(s -> result.add(JSONObject.parseObject(s, SimpleUserResponse.class)));
-        }
-        return result;
+    public Set<CIMUserInfo> searchUsersByTopicGroup(String topicGroupId) {
+        return userInfoCacheService.onlineUserByTopicGroup(topicGroupId);
+    }
+
+    @Override
+    public RouteInfo online(OnlineRequest loginReqVO) throws Exception {
+        // 选择一台netty server
+        String server = routeHandle.routeServer(serverCache.getServerList(), String.valueOf(loginReqVO.getUserId()));
+        LOGGER.info("username=[{}] route server info=[{}]", loginReqVO.getUsername(), server);
+
+        // 得到netty server解析成路由对象并检查netty server是否可用
+        RouteInfo routeInfo = RouteInfoParseUtil.parse(server);
+        commonBizService.checkServerAvailable(routeInfo);
+
+        //登录到服务器
+        loginServer(loginReqVO);
+
+        //保存用户路由信息
+        saveRouteInfo(loginReqVO.getUserId(), server);
+        return routeInfo;
     }
 }

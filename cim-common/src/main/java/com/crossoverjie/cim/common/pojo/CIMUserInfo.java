@@ -1,42 +1,38 @@
 package com.crossoverjie.cim.common.pojo;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 /**
  * Function: 用户信息
  *
  * @author crossoverJie
- *         Date: 2018/12/24 02:33
+ * Date: 2018/12/24 02:33
  * @since JDK 1.8
  */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class CIMUserInfo {
-    private String userId ;
-    private String username ;
 
-    public CIMUserInfo(String userId, String username) {
-        this.userId = userId;
-        this.username = username;
-    }
+    /**
+     * 用户id
+     */
+    private String userId;
 
-    public String getUserId() {
-        return userId;
-    }
+    /**
+     * 用户名称
+     */
+    private String username;
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
+    /**
+     * 用户等级
+     */
+    private String level;
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    @Override
-    public String toString() {
-        return "CIMUserInfo{" +
-                "userId=" + userId +
-                ", username='" + username + '\'' +
-                '}';
-    }
+    /**
+     * 用户所在题组
+     */
+    private String topicGroupId;
 }

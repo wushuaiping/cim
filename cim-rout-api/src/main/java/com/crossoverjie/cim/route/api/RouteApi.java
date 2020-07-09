@@ -1,7 +1,7 @@
 package com.crossoverjie.cim.route.api;
 
-import com.crossoverjie.cim.route.api.vo.req.ChatReqVO;
-import com.crossoverjie.cim.route.api.vo.req.LoginReqVO;
+import com.crossoverjie.cim.route.api.vo.req.OfflineRequest;
+import com.crossoverjie.cim.route.api.vo.req.OnlineRequest;
 
 /**
  * Function: Route Api
@@ -19,7 +19,7 @@ public interface RouteApi {
      * @return
      * @throws Exception
      */
-    Object offLine(ChatReqVO groupReqVO) throws Exception;
+    Object offLine(OfflineRequest groupReqVO) throws Exception;
 
     /**
      * Login account
@@ -28,5 +28,5 @@ public interface RouteApi {
      * @return
      * @throws Exception
      */
-    Object online(LoginReqVO loginReqVO) throws Exception;
+    Object online(OnlineRequest loginReqVO) throws Exception;
 }

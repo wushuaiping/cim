@@ -2,7 +2,7 @@ package com.crossoverjie.cim.server.test;
 
 import com.crossoverjie.cim.client.CIMClientApplication;
 import com.crossoverjie.cim.client.service.RouteRequest;
-import com.crossoverjie.cim.client.vo.req.LoginReqVO;
+import com.crossoverjie.cim.client.vo.req.OnlineRequest;
 import com.crossoverjie.cim.client.vo.res.CIMServerResVO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,7 +37,7 @@ public class RouteTest {
 
     @Test
     public void test() throws Exception {
-        LoginReqVO vo = new LoginReqVO(userId,username) ;
+        OnlineRequest vo = new OnlineRequest(userId,username) ;
         CIMServerResVO.ServerInfo cimServer = routeRequest.getCIMServer(vo);
         LOGGER.info("cimServer=[{}]",cimServer.toString());
     }

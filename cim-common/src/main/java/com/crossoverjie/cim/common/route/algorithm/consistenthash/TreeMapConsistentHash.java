@@ -42,7 +42,7 @@ public class TreeMapConsistentHash extends AbstractConsistentHash {
             return last.get(last.firstKey());
         }
         if (treeMap.size() == 0){
-            throw new CIMException(StatusEnum.SERVER_NOT_AVAILABLE) ;
+            throw new CIMException(StatusEnum.FAIL) ;
         }
         return treeMap.firstEntry().getValue();
     }

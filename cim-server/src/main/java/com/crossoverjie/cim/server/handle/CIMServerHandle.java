@@ -69,16 +69,14 @@ public class CIMServerHandle extends SimpleChannelInboundHandler<CIMRequestProto
         super.userEventTriggered(ctx, evt);
     }
 
-
-
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, CIMRequestProto.CIMReqProtocol msg) throws Exception {
         LOGGER.info("received msg=[{}]", msg.toString());
 
         if (msg.getType() == Constants.CommandType.LOGIN) {
             //保存客户端与 Channel 之间的关系
-            SessionSocketHolder.put(msg.getRequestId(), (NioSocketChannel) ctx.channel());
-            SessionSocketHolder.saveSession(msg.getRequestId(), msg.getReqMsg());
+            SessionSocketHolder.put(String.valueOf(msg.getRequestId()), (NioSocketChannel) ctx.channel());
+            SessionSocketHolder.saveSession(String.valueOf(msg.getRequestId()), msg.getReqMsg());
             LOGGER.info("client [{}] online success!!", msg.getReqMsg());
         }
 

@@ -12,11 +12,6 @@ public final class Constants {
     public static class Redis {
 
         /**
-         * 账号前缀
-         */
-        public final static String ACCOUNT_PREFIX = "cim-account:";
-
-        /**
          * 路由信息前缀
          */
         public final static String ROUTE_PREFIX = "cim-route:";
@@ -24,7 +19,12 @@ public final class Constants {
         /**
          * 登录服务器状态前缀
          */
-        public final static String LOGIN_STATUS_PREFIX = "login-status:";
+        public final static String LOGIN_PREFIX = "login:";
+
+        /**
+         * 在线用户前缀
+         */
+        public final static String ONLINE_USER_LIST_PREFIX = "online-user:";
 
         /**
          * 题组分组前缀

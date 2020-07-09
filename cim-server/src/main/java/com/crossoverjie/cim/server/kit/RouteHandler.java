@@ -3,7 +3,7 @@ package com.crossoverjie.cim.server.kit;
 import com.crossoverjie.cim.common.core.proxy.ProxyManager;
 import com.crossoverjie.cim.common.pojo.CIMUserInfo;
 import com.crossoverjie.cim.route.api.RouteApi;
-import com.crossoverjie.cim.route.api.vo.req.ChatReqVO;
+import com.crossoverjie.cim.route.api.vo.req.OfflineRequest;
 import com.crossoverjie.cim.server.config.AppConfiguration;
 import com.crossoverjie.cim.server.util.SessionSocketHolder;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -61,12 +61,16 @@ public class RouteHandler {
     public void clearRouteInfo(CIMUserInfo userInfo) {
         RouteApi routeApi = new ProxyManager<>(RouteApi.class, configuration.getRouteUrl(), okHttpClient).getInstance();
         Response response = null;
-        ChatReqVO vo = new ChatReqVO(userInfo.getUserId(), userInfo.getUsername());
+        OfflineRequest vo = new OfflineRequest();
+        vo.setUserId(userInfo.getUserId());
+        vo.setLevel(userInfo.getLevel());
+        vo.setUsername(userInfo.getUsername());
+        vo.setTopicGroupId(userInfo.getTopicGroupId());
         try {
             response = (Response) routeApi.offLine(vo);
-        } catch (Exception e){
-            LOGGER.error("Exception",e);
-        }finally {
+        } catch (Exception e) {
+            LOGGER.error("Exception", e);
+        } finally {
             response.body().close();
         }
     }

@@ -6,7 +6,7 @@ import com.crossoverjie.cim.client.service.EchoService;
 import com.crossoverjie.cim.client.service.RouteRequest;
 import com.crossoverjie.cim.client.thread.ContextHolder;
 import com.crossoverjie.cim.client.vo.req.GroupReqVO;
-import com.crossoverjie.cim.client.vo.req.LoginReqVO;
+import com.crossoverjie.cim.client.vo.req.OnlineRequest;
 import com.crossoverjie.cim.client.vo.req.P2PReqVO;
 import com.crossoverjie.cim.client.vo.res.CIMServerResVO;
 import com.crossoverjie.cim.client.vo.res.OnlineUsersResVO;
@@ -92,10 +92,10 @@ public class RouteRequestImpl implements RouteRequest {
     }
 
     @Override
-    public CIMServerResVO.ServerInfo getCIMServer(LoginReqVO loginReqVO) throws Exception {
+    public CIMServerResVO.ServerInfo getCIMServer(OnlineRequest loginReqVO) throws Exception {
 
         RouteApi routeApi = new ProxyManager<>(RouteApi.class, routeUrl, okHttpClient).getInstance();
-        com.crossoverjie.cim.route.api.vo.req.LoginReqVO vo = new com.crossoverjie.cim.route.api.vo.req.LoginReqVO() ;
+        com.crossoverjie.cim.route.api.vo.req.OnlineRequest vo = new com.crossoverjie.cim.route.api.vo.req.OnlineRequest() ;
         vo.setUserId(loginReqVO.getUserId());
         vo.setUsername(loginReqVO.getUsername());
 

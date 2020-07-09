@@ -1,13 +1,14 @@
 package com.crossoverjie.cim.route.service;
 
+import com.crossoverjie.cim.common.pojo.CIMUserInfo;
+import com.crossoverjie.cim.common.pojo.RouteInfo;
 import com.crossoverjie.cim.route.api.vo.req.ChatReqVO;
-import com.crossoverjie.cim.route.api.vo.req.LoginReqVO;
+import com.crossoverjie.cim.route.api.vo.req.OfflineRequest;
+import com.crossoverjie.cim.route.api.vo.req.OnlineRequest;
 import com.crossoverjie.cim.route.api.vo.res.CIMServerResVO;
-import com.crossoverjie.cim.route.api.vo.res.RegisterInfoResVO;
-import com.crossoverjie.cim.route.api.vo.res.SimpleUserResponse;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Function: 账户服务
@@ -19,21 +20,12 @@ import java.util.Map;
 public interface AccountService {
 
     /**
-     * 注册用户
-     *
-     * @param info 用户信息
-     * @return
-     * @throws Exception
-     */
-    RegisterInfoResVO register(RegisterInfoResVO info) throws Exception;
-
-    /**
      * 登录服务
      *
      * @param loginReqVO 登录信息
      * @throws Exception
      */
-    void loginServer(LoginReqVO loginReqVO) throws Exception;
+    void loginServer(OnlineRequest loginReqVO) throws Exception;
 
     /**
      * 保存路由信息
@@ -42,7 +34,7 @@ public interface AccountService {
      * @param loginReqVO 用户信息
      * @throws Exception
      */
-    void saveRouteInfo(LoginReqVO loginReqVO, String server) throws Exception;
+    void saveRouteInfo(String userId, String server) throws Exception;
 
     /**
      * 加载所有用户的路有关系
@@ -75,7 +67,9 @@ public interface AccountService {
      * @param userId 下线用户ID
      * @throws Exception
      */
-    void offLine(String userId) throws Exception;
+    void offline(OfflineRequest offlineRequest) throws Exception;
 
-    List<SimpleUserResponse> searchUsersByTopicGroup(String topicGroupId);
+    Set<CIMUserInfo> searchUsersByTopicGroup(String topicGroupId);
+
+    RouteInfo online(OnlineRequest loginReqVO) throws Exception;
 }

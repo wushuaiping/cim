@@ -9,7 +9,7 @@ import com.crossoverjie.cim.client.service.RouteRequest;
 import com.crossoverjie.cim.client.service.impl.ClientInfo;
 import com.crossoverjie.cim.client.thread.ContextHolder;
 import com.crossoverjie.cim.client.vo.req.GoogleProtocolVO;
-import com.crossoverjie.cim.client.vo.req.LoginReqVO;
+import com.crossoverjie.cim.client.vo.req.OnlineRequest;
 import com.crossoverjie.cim.client.vo.res.CIMServerResVO;
 import com.crossoverjie.cim.common.constant.Constants;
 import com.crossoverjie.cim.common.protocol.CIMRequestProto;
@@ -130,7 +130,7 @@ public class CIMClient {
      * @throws Exception
      */
     private CIMServerResVO.ServerInfo userLogin() {
-        LoginReqVO loginReqVO = new LoginReqVO(userId, username);
+        OnlineRequest loginReqVO = new OnlineRequest(userId, username);
         CIMServerResVO.ServerInfo cimServer = null;
         try {
             cimServer = routeRequest.getCIMServer(loginReqVO);

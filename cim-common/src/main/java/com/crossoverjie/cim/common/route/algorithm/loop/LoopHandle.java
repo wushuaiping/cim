@@ -20,7 +20,7 @@ public class LoopHandle implements RouteHandle {
     @Override
     public String routeServer(List<String> values,String key) {
         if (values.size() == 0) {
-            throw new CIMException(StatusEnum.SERVER_NOT_AVAILABLE) ;
+            throw new CIMException(StatusEnum.FAIL) ;
         }
         Long position = index.incrementAndGet() % values.size();
         if (position < 0) {

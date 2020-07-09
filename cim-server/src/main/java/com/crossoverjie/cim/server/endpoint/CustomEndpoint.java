@@ -13,7 +13,7 @@ import java.util.Map;
  *         Date: 17/04/2018 14:47
  * @since JDK 1.8
  */
-public class CustomEndpoint extends AbstractEndpoint<Map<Long,NioSocketChannel>> {
+public class CustomEndpoint extends AbstractEndpoint<Map<String,NioSocketChannel>> {
 
 
     /**
@@ -26,7 +26,7 @@ public class CustomEndpoint extends AbstractEndpoint<Map<Long,NioSocketChannel>>
     }
 
     @Override
-    public Map<Long, NioSocketChannel> invoke() {
+    public Map<String, NioSocketChannel> invoke() {
         return SessionSocketHolder.getRelationShip();
     }
 }

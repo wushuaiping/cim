@@ -26,7 +26,7 @@ import java.net.InetSocketAddress;
  * Function:
  *
  * @author crossoverJie
- *         Date: 21/05/2018 00:30
+ * Date: 21/05/2018 00:30
  * @since JDK 1.8
  */
 @Component
@@ -79,16 +79,17 @@ public class CIMServer {
 
     /**
      * Push msg to client.
+     *
      * @param sendMsgReqVO 消息
      */
-    public void sendMsg(SendMsgReqVO sendMsgReqVO){
+    public void sendMsg(SendMsgReqVO sendMsgReqVO) {
         NioSocketChannel socketChannel = SessionSocketHolder.get(sendMsgReqVO.getUserId());
 
         if (null == socketChannel) {
             LOGGER.error("client {} offline!", sendMsgReqVO.getUserId());
         }
         CIMRequestProto.CIMReqProtocol protocol = CIMRequestProto.CIMReqProtocol.newBuilder()
-                .setRequestId(sendMsgReqVO.getUserId())
+                .setRequestId(Long.valueOf(sendMsgReqVO.getUserId()))
                 .setReqMsg(sendMsgReqVO.getMsg())
                 .setType(Constants.CommandType.MSG)
                 .build();

@@ -1,7 +1,7 @@
 package com.crossoverjie.cim.client.service;
 
 import com.crossoverjie.cim.client.vo.req.GroupReqVO;
-import com.crossoverjie.cim.client.vo.req.LoginReqVO;
+import com.crossoverjie.cim.client.vo.req.OnlineRequest;
 import com.crossoverjie.cim.client.vo.req.P2PReqVO;
 import com.crossoverjie.cim.client.vo.res.CIMServerResVO;
 import com.crossoverjie.cim.client.vo.res.OnlineUsersResVO;
@@ -38,7 +38,7 @@ public interface RouteRequest {
      * @param loginReqVO
      * @throws Exception
      */
-    CIMServerResVO.ServerInfo getCIMServer(LoginReqVO loginReqVO) throws Exception;
+    CIMServerResVO.ServerInfo getCIMServer(OnlineRequest loginReqVO) throws Exception;
 
     /**
      * 获取所有在线用户

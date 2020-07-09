@@ -1,8 +1,5 @@
 package com.crossoverjie.cim.common.util;
 
-import java.util.Random;
-import java.util.UUID;
-
 /**
  * Function:
  *
